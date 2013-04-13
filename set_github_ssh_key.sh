@@ -18,7 +18,7 @@ _githubUserKeyURL="https://api.github.com/user/keys"
 _githubSSHKeyTitle=`hostname -s`
 
 #ssh key settings
-_sshKeyFile="/root/.ssh/id_rsa"
+_sshKeyFile="/`whoami`/.ssh/id_rsa"
 _sshKeyPubFile=$_sshKeyFile".pub"
 _sshKeyPassword=""
 
