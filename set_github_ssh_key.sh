@@ -1,11 +1,8 @@
 #!/bin/sh
 
-if [ $# -lt 1 -o "$1" = "-h" ]; then
+if [ $# -lt 2 ]; then
 	echo ""
-	echo "Usage: set_github_ssh_key.sh [OPTION] GITHUB_USER GITHUB_PASSWORD"
-	echo ""
-	echo "OPTION:"
-	echo "	-h: show help"
+	echo "Usage: set_github_ssh_key.sh GITHUB_USER GITHUB_PASSWORD [SSH_KEY_PASSWORD]"
 	echo ""
 	exit 1
 fi
@@ -21,6 +18,9 @@ _githubSSHKeyTitle=`hostname -s`
 _sshKeyFile="$HOME/.ssh/id_rsa"
 _sshKeyPubFile=$_sshKeyFile".pub"
 _sshKeyPassword=""
+if [ $# -ge 3 ]; then
+	_sshKeyPassword=$3
+fi
 
 #generate a token
 _token=`curl -u "${_githubUsername}:${_githubPassword}" -d "{\"scopes\":[\"user\"]}" $_githubAuthURL | grep "token" | cut -d"\"" -f4`
