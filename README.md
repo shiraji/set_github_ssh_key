@@ -1,5 +1,5 @@
 # GitHubへ公開鍵を設定するシェル
-主な目的はVPSなどで新しく環境作ったときに、自動でGitHubへ公開鍵を設定させる。
+VPSなどで新しく環境作ったときに、GitHub APIのUser Public Keys APIを利用し、GitHubへ公開鍵を設定させる。
 
 ##使い方
 `set_github_ssh_key.sh GITHUB_USER GITHUB_PASSWORD [SSH_KEY_PASSWORD]`
