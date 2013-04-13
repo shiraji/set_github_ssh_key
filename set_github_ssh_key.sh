@@ -15,7 +15,8 @@ _githubUserKeyURL="https://api.github.com/user/keys"
 _githubSSHKeyTitle=`hostname -s`
 
 #ssh key settings
-_sshKeyFile="$HOME/.ssh/id_rsa"
+_sshKeyDir="$HOME/.ssh"
+_sshKeyFile="$_sshKeyDir/id_rsa"
 _sshKeyPubFile=$_sshKeyFile".pub"
 _sshKeyPassword=""
 if [ $# -ge 3 ]; then
@@ -24,6 +25,11 @@ fi
 
 #generate a token
 _token=`curl -u "${_githubUsername}:${_githubPassword}" -d "{\"scopes\":[\"user\"]}" $_githubAuthURL | grep "token" | cut -d"\"" -f4`
+
+#create ssh folder if it does not exist
+if [ ! -e $_sshKeyDir ]; then
+	mkdir -p $_sshKeyDir
+fi
 
 #run ssh-keygen if private key file does not exist
 if [ ! -e $_sshKeyFile ]; then
