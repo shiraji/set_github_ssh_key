@@ -2,7 +2,7 @@
 
 if [ $# -lt 1 -o "$1" = "-h" ]; then
 	echo ""
-	echo "Usage: set_github_ssh_key.sh [OPTION] GITHUB_PASSWORD"
+	echo "Usage: set_github_ssh_key.sh [OPTION] GITHUB_USER GITHUB_PASSWORD"
 	echo ""
 	echo "OPTION:"
 	echo "	-h: show help"
@@ -11,22 +11,27 @@ if [ $# -lt 1 -o "$1" = "-h" ]; then
 fi
 
 #github settings
-_github_username="shiraji"
-_github_password=$1
+_githubUsername=$1
+_githubPassword=$2
 _githubAuthURL="https://api.github.com/authorizations"
+_githubUserKeyURL="https://api.github.com/user/keys"
+_githubSSHKeyTitle=`hostname -s`
 
 #ssh key settings
-_ssh_key_file="/root/.ssh/id_rsa"
-_ssh_key_pub_file=$_ssh_key_file".pub"
-_ssh_key_password=""
+_sshKeyFile="/root/.ssh/id_rsa"
+_sshKeyPubFile=$_sshKeyFile".pub"
+_sshKeyPassword=""
 
 #generate a token
-_token=`curl -u "${_github_username}:${_github_password}" -d "{\"scopes\":[\"user\"]}" $_githubAuthURL | grep "token" | cut -d"\"" -f4`
+_token=`curl -u "${_githubUsername}:${_githubPassword}" -d "{\"scopes\":[\"user\"]}" $_githubAuthURL | grep "token" | cut -d"\"" -f4`
 
-#run ssh-keygen if file does not exist
-if [ ! -e $_ssh_key_file ]; then
-	ssh-keygen -f $_ssh_key_file -N "$_ssh_key_password"
+#run ssh-keygen if private key file does not exist
+if [ ! -e $_sshKeyFile ]; then
+	ssh-keygen -f $_sshKeyFile -N "$_sshKeyPassword"
 fi
 
 #post ssh public key
-curl -H "Authorization: token $_token" https://api.github.com/user/keys -d "{ \"title\":\"`hostname -s`\", \"key\":\"`cat $_ssh_key_pub_file`\" }"
+curl -H "Authorization: token $_token" $_githubUserKeyURL -d "{ \"title\":\"$_githubSSHKeyTitle\", \"key\":\"`cat $_sshKeyPubFile`\" }"
+
+exit 0
+
