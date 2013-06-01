@@ -14,9 +14,10 @@ read -s _githubPassword
 echo
 
 #get GitHub SSH title. Default value is the result of `hostname -s`
-echo -n "Enter GitHub SSH Key Title [hostname -s]: "
+_defaultTitle=`hostname -s`_`whoami`
+echo -n "Enter GitHub SSH Key Title [${_defaultTitle}]: "
 read _githubSSHKeyTitle
-_githubSSHKeyTitle=${_githubSSHKeyTitle:-`hostname -s`}
+_githubSSHKeyTitle=${_githubSSHKeyTitle:-${_defaultTitle}}
 
 #get SSH password
 echo -n "Enter SSH Key password: "
@@ -40,21 +41,31 @@ fi
 
 #put github settings to ssh config
 _sshConfigFile="${_sshDir}/config"
-if grep -Fxq "Host ${_githubUsername}.github.com" ${_sshConfigFile}
+
+# make config file and its permissions
+if [ ! -f ${_sshConfigFile} ]; then
+	touch ${_sshConfigFile}
+	chmod 600 ${_sshConfigFile}
+fi
+
+_contents="Host github.com
+        HostName github.com
+        User git
+        PreferredAuthentications publickey
+        IdentityFile ${_sshKeyFile}"
+
+#check if the github setting exist
+if grep -Fxq "HostName github.com" ${_sshConfigFile}
 then
 	echo "Github.com settings found: " $_sshConfigFile
 	echo "Following line should be added to ${_sshConfigFile}"
-	echo "Host ${_githubUsername}.github.com"
-	echo "	Hostname github.com"
-	echo "	PreferredAuthentications publickey"
-	echo "	IdentityFile ${_sshKeyFile}"
+	echo -e ${_contents}
+	echo
+	echo "If you really want to add this setting, then, you need to use ssh-add to add this key"
 else
-
+#append config
 cat >> ${_sshConfigFile} << EOS
-Host ${_githubUsername}.github.com
-	Hostname github.com
-	PreferredAuthentications publickey
-	IdentityFile ${_sshKeyFile}
+${_contents}
 EOS
 
 fi
