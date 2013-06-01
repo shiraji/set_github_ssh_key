@@ -42,6 +42,11 @@ fi
 #put github settings to ssh config
 _sshConfigFile="${_sshDir}/config"
 
+#run ssh-keygen if private key file does not exist
+if [ ! -e ${_sshKeyFile} ]; then
+	ssh-keygen -f ${_sshKeyFile} -N "${_sshKeyPassword}"
+fi
+
 # make config file and its permissions
 if [ ! -f ${_sshConfigFile} ]; then
 	touch ${_sshConfigFile}
@@ -63,16 +68,12 @@ then
 	echo
 	echo "If you really want to add this setting, then, you need to use ssh-add to add this key"
 else
+
 #append config
 cat >> ${_sshConfigFile} << EOS
 ${_contents}
 EOS
 
-fi
-
-#run ssh-keygen if private key file does not exist
-if [ ! -e ${_sshKeyFile} ]; then
-	ssh-keygen -f ${_sshKeyFile} -N "${_sshKeyPassword}"
 fi
 
 #generate a token
