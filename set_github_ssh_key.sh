@@ -54,10 +54,11 @@ if [ ! -f ${_sshConfigFile} ]; then
 fi
 
 _contents="Host github.com
-        HostName github.com
-        User git
-        PreferredAuthentications publickey
-        IdentityFile ${_sshKeyFile}"
+	HostName github.com
+	Port 22
+	User git
+	PreferredAuthentications publickey
+	IdentityFile ${_sshKeyFile}"
 
 #check if the github setting exist
 if grep -Fxq "HostName github.com" ${_sshConfigFile}
@@ -71,7 +72,12 @@ else
 
 #append config
 cat >> ${_sshConfigFile} << EOS
-${_contents}
+Host github.com
+	HostName github.com
+	Port 22
+	User git
+	PreferredAuthentications publickey
+	IdentityFile ${_sshKeyFile}"
 EOS
 
 fi
