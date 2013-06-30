@@ -72,12 +72,7 @@ else
 
 #append config
 cat >> ${_sshConfigFile} << EOS
-Host github.com
-	HostName github.com
-	Port 22
-	User git
-	PreferredAuthentications publickey
-	IdentityFile ${_sshKeyFile}"
+${_contents}
 EOS
 
 fi
