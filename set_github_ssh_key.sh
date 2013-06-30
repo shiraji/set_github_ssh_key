@@ -14,7 +14,7 @@ read -s _githubPassword
 echo
 
 #get GitHub SSH title. Default value is the result of `hostname -s`
-_defaultTitle=`hostname -s`_`whoami`
+_defaultTitle=`hostname -s`_`whoami`_`date +"%Y-%m-%d"`
 echo -n "Enter GitHub SSH Key Title [${_defaultTitle}]: "
 read _githubSSHKeyTitle
 _githubSSHKeyTitle=${_githubSSHKeyTitle:-${_defaultTitle}}
