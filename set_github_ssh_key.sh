@@ -61,13 +61,13 @@ _contents="Host github.com
 	IdentityFile ${_sshKeyFile}"
 
 #check if the github setting exist
-if grep -Fxq "HostName github.com" ${_sshConfigFile}
+if grep -Fq "Host github.com" ${_sshConfigFile}
 then
-	echo "Github.com settings found: " $_sshConfigFile
-	echo "Following line should be added to ${_sshConfigFile}"
-	echo -e ${_contents}
-	echo
-	echo "If you really want to add this setting, then, you need to use ssh-add to add this key"
+
+	echo -e "\033[0;33mGithub.com settings found: $_sshConfigFile\033[0;39m"
+	echo "If you really want to add this setting, you need to use ssh-add to add ${_sshKeyFile}"
+  echo
+
 else
 
 #append config
