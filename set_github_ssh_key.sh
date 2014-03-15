@@ -78,7 +78,7 @@ EOS
 fi
 
 #generate a token
-_token=`curl -u "${_githubUsername}:${_githubPassword}" -d "{\"scopes\":[\"user\"]}" ${_githubAuthURL} | grep "token" | cut -d"\"" -f4`
+_token=`curl -u "${_githubUsername}:${_githubPassword}" -d "{\"scopes\":[\"write:public_key\"], \"note\":\"create public key ${_githubSSHKeyTitle}\"\" }" ${_githubAuthURL} | grep "token" | cut -d"\"" -f4`
 
 #post ssh public key
 curl -H "Authorization: token ${_token}" ${_githubUserKeyURL} -d "{ \"title\":\"${_githubSSHKeyTitle}\", \"key\":\"`cat ${_sshKeyPubFile}`\" }"
